@@ -1,1 +1,2 @@
 add some text
+Creating a new branch is quick AND simple.
