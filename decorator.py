@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+from functools import wraps
 
 '''
 def logging(func):
@@ -74,24 +75,57 @@ def test1(*args, **kwargs):
 test1(1, 2, 3, 4)
 test1({"k1": "123", "k2": "456"})
 
-'''
+
 
 #装饰器不带参数
 def time_cost(func):
     def wrapper(*args, **kwargs):
         start = time.time()
-        func(*args, **kwargs)
+        #print func.__name__
+        result = func(*args, **kwargs)
         end = time.time()
         print "{} consumes total {} seconds".format(func.__name__, end-start)
+        return result
+    wrapper.__name__ = func.__name__ #重命名
     return wrapper
 
 @time_cost
-def test1():
+def test1(x, y):
+    print test1.__name__
     print "func test1 called"
     time.sleep(1)
+    return x + y
+print test1(1, 10)
 
-test1()    
-        
+'''
+
+#使用functools.wraps
+def dec_fun(func):
+    #@wraps(func)
+    def wrapper(*args, **kwargs):
+        print "in wrapper"
+        return func(*args, **kwargs)
+    return wrapper
+    
+@dec_fun
+def test(*args, **kwargs):
+    "test func"
+    print "in test"
+    print test.__name__
+    print test.__doc__
+    return args
+    
+print test(1, 2, 3, 4)
+
+#重绑定的过程----
+'''
+    def test以后，test = dec_fun(test) = wrapper
+    test(1, 2, 3, 4) = wrapper(1, 2, 3, 4)
+    此时test函数已经被重新绑定为wrapp函数，所以在test函数里面打印test.__name__,得到的是wrapp，test.__doc__得到的是None
+'''
+
+
+
         
         
         
